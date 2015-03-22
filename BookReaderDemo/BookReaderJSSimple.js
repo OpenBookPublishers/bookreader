@@ -2,9 +2,12 @@
 // This file shows the minimum you need to provide to BookReader to display a book
 //
 // Copyright(c)2008-2009 Internet Archive. Software license AGPL version 3.
+// Copyright(c) 2015 Open Book Publishers
 
 // Create the BookReader object
-br = new BookReader();
+var br = new BookReader();
+
+br.logoURL = 'http://www.openbookpublishers.com';
 
 // Return the width of a given page.  Here we assume all images are 800 pixels wide
 br.getPageWidth = function(index) {
@@ -16,16 +19,16 @@ br.getPageHeight = function(index) {
     return 1200;
 }
 
-// We load the images from archive.org -- you can modify this function to retrieve images
-// using a different URL structure
+// We load the images (pages) from given URL prefix. Images are successively
+// numbered, starting with 0.
 br.getPageURI = function(index, reduce, rotate) {
     // reduce and rotate are ignored in this simple implementation, but we
     // could e.g. look at reduce and load images from a different directory
     // or pass the information to an image server
     var leafStr = '000';            
-    var imgStr = (index+1).toString();
+    var imgStr = index.toString();
     var re = new RegExp("0{"+imgStr.length+"}$");
-    var url = 'http://www.archive.org/download/BookReader/img/page'+leafStr.replace(re, imgStr) + '.jpg';
+    var url = 'http://www.openbookpublishers.com/bookreader/BookReaderTestResolution/DiderotRameausNephew-'+ imgStr + '.jpg';
     return url;
 }
 
@@ -77,11 +80,14 @@ br.getPageNum = function(index) {
 }
 
 // Total number of leafs
-br.numLeafs = 15;
+br.numLeafs = 177;
 
 // Book title and the URL used for the book title link
-br.bookTitle= 'Open Library BookReader Presentation';
-br.bookUrl  = 'http://openlibrary.org';
+br.bookTitle = "Denis Diderot's 'Rameau's Nephew'";
+br.bookUrl = 'http://www.openbookpublishers.com/product/216';
+
+// Base URL of the online book.
+br.bookBaseURL = "http://openbookpublishers.com/bookreader/BookReaderDemo";
 
 // Override the path used to find UI images
 br.imagesBaseURL = '../BookReader/images/';
@@ -90,10 +96,28 @@ br.getEmbedCode = function(frameWidth, frameHeight, viewParams) {
     return "Embed code not supported in bookreader demo.";
 }
 
-// Let's go!
-br.init();
+// This function is called back when the JSON-encoded book metadata download has
+// been completed.
+function load_book (link_mdata_json) {
+    window.br.link_mdata = link_mdata_json;
 
-// read-aloud and search need backend compenents and are not supported in the demo
-$('#BRtoolbar').find('.read').hide();
-$('#textSrch').hide();
-$('#btnSrch').hide();
+    // Let's go!
+    window.br.init();
+
+    // read-aloud and search need backend compenents and are not supported in the demo
+    $('#BRtoolbar').find('.read').hide();
+    $('#textSrch').hide();
+    $('#btnSrch').hide();
+}
+
+// First download the JSON-encoded book metadata, before loading the rest of the
+// book.
+$.ajax({
+    type : "GET",
+    dataType : "json",
+    url : "http://openbookpublishers.com/bookreader/BookReader/diderot-linkmetadata.json",
+    success : load_book,
+    error : function() {
+      alert('Could not load book data, please try refreshing this page.');
+    }
+});
