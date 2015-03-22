@@ -1,5 +1,6 @@
 /*
 Copyright(c)2008-2009 Internet Archive. Software license AGPL version 3.
+Copyright(c) 2015 Open Book Publishers
 
 This file is part of BookReader.
 
@@ -88,6 +89,10 @@ function BookReader() {
     //     path in the CSS.  Would be better to automagically find that path.
     this.imagesBaseURL = '/bookreader/images/';
 
+    // FIXME document
+    this.bookBaseURL = null;
+    // FIXME document
+    this.link_mdata = null;
 
     // Zoom levels
     // $$$ provide finer grained zooming
@@ -507,6 +512,49 @@ BookReader.prototype.drawLeafsOnePage = function() {
             //$(div).text('loading...');
 
             $('#BRpageview').append(div);
+
+
+// The hyperlinks overlay is only designed to work in 1up and 2up modes.
+// FIXME i think the second disjunct might be redundant because this function is only called for 1up it seems.
+if ((this.mode == this.constMode1up) || (this.mode == this.constMode2up)) {
+
+var links_on_page = this.link_mdata[index].links_metadata;
+
+var width = parseInt(this._getPageWidth(index) / this.reduce);
+
+for (link_idx = 0; link_idx < links_on_page.length; link_idx++) {
+  var link = links_on_page[link_idx];
+  var url = link.url;
+  var ldiv = document.createElement("div");
+  ldiv.id = 'linkdiv' + link_idx;
+  ldiv.style.position = "absolute";
+
+  $(ldiv).css('top', (leafTop + (height * link.y)) + 'px');
+  $(ldiv).css('left', (left + (width * link.x)) + 'px');
+  $(ldiv).css('width', (width * link.width) + 'px');
+  $(ldiv).css('height', (height * link.height) + 'px');
+  $(ldiv).css('cursor', 'pointer');
+  // NOTE we have to use bind for early binding of link.url; the following code involves late binding -- all the links end up linking to the same (last page):
+//    $(ldiv).click({ link_url : link.url}, function(event) { document.location.href = event.data.link_url; return false; } );
+  if (link.dest_page != null) {
+    $(ldiv).bind('click', { dest_page : link.dest_page, bookBaseURL : this.bookBaseURL, page_mode : this.mode }, function(event) { document.location.href = event.data.bookBaseURL + "/#page/" + event.data.dest_page + "/mode/" + event.data.page_mode + "up"; return false; });
+  } else {
+    $(ldiv).bind('click', { link_url : link.url }, function(event) { window.open(event.data.link_url, '_blank'); return false; });
+  }
+//TODO disable default page-turning in the 2-pane view, but keep page-turning working if people click in a margin.
+//TODO enable local links (within the PDF)
+//TODO embedding the book.
+
+    $(ldiv).css('background-color', 'rgba(255,255,0,0.5)');
+
+//  $(ldiv).html('<a href="' + link.url + '">' + link.url + '</a>');
+  if (false) { // NOTE for debugging
+    $(ldiv).css('background-color', 'yellow');
+  }
+
+  $('#BRpageview').append(ldiv);
+}
+}
 
             var img = document.createElement("img");
             img.src = this._getPageURI(index, this.reduce, 0);
