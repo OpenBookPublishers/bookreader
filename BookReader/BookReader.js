@@ -93,6 +93,8 @@ function BookReader() {
     this.bookBaseURL = null;
     // FIXME document
     this.link_mdata = null;
+    // FIXME document
+    this.highlight_links = false;
 
     // Zoom levels
     // $$$ provide finer grained zooming
@@ -425,6 +427,58 @@ BookReader.prototype.setClickHandler2UP = function( element, data, handler) {
     });
 }
 
+function overlayLinks (container, self, index, leafTop, height, width, left) {
+
+if (self.extra_posttitle_page && (index >= 1) && (self.mode == self.constMode2up)) {
+  index = index - 1;
+}
+
+var links_on_page = self.link_mdata[index].links_metadata;
+
+//var width = parseInt(self._getPageWidth(index) / self.reduce);
+
+for (link_idx = 0; link_idx < links_on_page.length; link_idx++) {
+
+  var link = links_on_page[link_idx];
+  var ldiv = document.createElement("div");
+  ldiv.id = 'linkdiv' + link_idx;
+  $(ldiv).addClass('linkdiv');
+  ldiv.style.position = "absolute";
+
+  $(ldiv).css('top', (leafTop + (height * link.y)) + 'px');
+  $(ldiv).css('left', (left + (width * link.x)) + 'px');
+  $(ldiv).css('width', (width * link.width) + 'px');
+  $(ldiv).css('height', (height * link.height) + 'px');
+  $(ldiv).css('cursor', 'pointer');
+  $(ldiv).css('zIndex', '5');
+  // NOTE we have to use bind for early binding of link.url; the following code involves late binding -- all the links end up linking to the same (last page):
+//    $(ldiv).click({ link_url : link.url}, function(event) { document.location.href = event.data.link_url; return false; } );
+  if (link.dest_page != null) {
+    $(ldiv).bind('click', { dest_page : link.dest_page, bookBaseURL : self.bookBaseURL, page_mode : self.mode }, function(event) {
+      var dest_page = parseInt(event.data.dest_page, 10);
+      if (self.extra_posttitle_page && (self.mode == self.constMode2up)) {
+        dest_page = dest_page + 1;
+      }
+      document.location.href = event.data.bookBaseURL + "#page/" + dest_page + "/mode/" + event.data.page_mode + "up"; return false;
+    });
+  } else {
+    $(ldiv).bind('click', { link_url : link.url }, function(event) { window.open(event.data.link_url, '_blank'); return false; });
+  }
+//TODO disable default page-turning in the 2-pane view, but keep page-turning working if people click in a margin.
+
+  if (self.highlight_links) {
+    $(ldiv).css('background-color', 'rgba(255,255,0,0.5)');
+  }
+
+//  $('#BRpageview').append(ldiv);
+  $(container).append(ldiv);
+}
+
+  return;
+}
+
+
+
 // drawLeafsOnePage()
 //______________________________________________________________________________
 BookReader.prototype.drawLeafsOnePage = function() {
@@ -513,48 +567,7 @@ BookReader.prototype.drawLeafsOnePage = function() {
 
             $('#BRpageview').append(div);
 
-
-// The hyperlinks overlay is only designed to work in 1up and 2up modes.
-// FIXME i think the second disjunct might be redundant because this function is only called for 1up it seems.
-if ((this.mode == this.constMode1up) || (this.mode == this.constMode2up)) {
-
-var links_on_page = this.link_mdata[index].links_metadata;
-
-var width = parseInt(this._getPageWidth(index) / this.reduce);
-
-for (link_idx = 0; link_idx < links_on_page.length; link_idx++) {
-  var link = links_on_page[link_idx];
-  var url = link.url;
-  var ldiv = document.createElement("div");
-  ldiv.id = 'linkdiv' + link_idx;
-  ldiv.style.position = "absolute";
-
-  $(ldiv).css('top', (leafTop + (height * link.y)) + 'px');
-  $(ldiv).css('left', (left + (width * link.x)) + 'px');
-  $(ldiv).css('width', (width * link.width) + 'px');
-  $(ldiv).css('height', (height * link.height) + 'px');
-  $(ldiv).css('cursor', 'pointer');
-  // NOTE we have to use bind for early binding of link.url; the following code involves late binding -- all the links end up linking to the same (last page):
-//    $(ldiv).click({ link_url : link.url}, function(event) { document.location.href = event.data.link_url; return false; } );
-  if (link.dest_page != null) {
-    $(ldiv).bind('click', { dest_page : link.dest_page, bookBaseURL : this.bookBaseURL, page_mode : this.mode }, function(event) { document.location.href = event.data.bookBaseURL + "/#page/" + event.data.dest_page + "/mode/" + event.data.page_mode + "up"; return false; });
-  } else {
-    $(ldiv).bind('click', { link_url : link.url }, function(event) { window.open(event.data.link_url, '_blank'); return false; });
-  }
-//TODO disable default page-turning in the 2-pane view, but keep page-turning working if people click in a margin.
-//TODO enable local links (within the PDF)
-//TODO embedding the book.
-
-    $(ldiv).css('background-color', 'rgba(255,255,0,0.5)');
-
-//  $(ldiv).html('<a href="' + link.url + '">' + link.url + '</a>');
-  if (false) { // NOTE for debugging
-    $(ldiv).css('background-color', 'yellow');
-  }
-
-  $('#BRpageview').append(ldiv);
-}
-}
+            overlayLinks ('#BRpageview', this, index, leafTop, height, width, left);
 
             var img = document.createElement("img");
             img.src = this._getPageURI(index, this.reduce, 0);
@@ -960,6 +973,8 @@ BookReader.prototype.drawLeafsTwoPage = function() {
 
     // this.twoPagePlaceFlipAreas();  // No longer used
 
+    overlayLinks ('#BRtwopageview', this, indexL, top, this.twoPage.height, this.twoPage.scaledWL, this.twoPage.gutter - this.twoPage.scaledWL);
+    overlayLinks ('#BRtwopageview', this, indexR, top, this.twoPage.height, this.twoPage.scaledWR, this.twoPage.gutter);
 }
 
 // updatePageNumBox2UP
@@ -2212,6 +2227,7 @@ BookReader.prototype.flipBackToIndex = function(index) {
 //______________________________________________________________________________
 // Flips the page on the left towards the page on the right
 BookReader.prototype.flipLeftToRight = function(newIndexL, newIndexR) {
+    $('.linkdiv').remove(); // Clear the links overlay, otherwise we'll get hyperlinks stacking up in it.
 
     var leftLeaf = this.twoPage.currentIndexL;
 
@@ -2347,6 +2363,16 @@ BookReader.prototype.flipLeftToRight = function(newIndexL, newIndexR) {
             self.updateSearchHilites2UP();
             self.updatePageNumBox2UP();
 
+            // Protect against negative page indices. I think this shows up in
+            // two-page mode, when the cover (having index 0) is shown on the
+            // right; the left pane is not itself part of the book, and gets a
+            // negative index. This only occurs on left pages in two-page mode;
+            // never on right-pages. It also never occurs in single-page mode.
+            if (self.twoPage.currentIndexL >= 0) {
+              overlayLinks ('#BRtwopageview', self, self.twoPage.currentIndexL, top, self.twoPage.height, self.twoPage.scaledWL, self.twoPage.gutter - newWidthL);
+            }
+            overlayLinks ('#BRtwopageview', self, self.twoPage.currentIndexR, top, self.twoPage.height, self.twoPage.scaledWR, self.twoPage.gutter);
+
             // self.twoPagePlaceFlipAreas(); // No longer used
             self.setMouseHandlers2UP();
             self.twoPageSetCursor();
@@ -2411,6 +2437,8 @@ BookReader.prototype.willChangeToIndex = function(index)
 //______________________________________________________________________________
 // Flip from left to right and show the nextL and nextR indices on those sides
 BookReader.prototype.flipRightToLeft = function(newIndexL, newIndexR) {
+    $('.linkdiv').remove(); // Clear the links overlay, otherwise we'll get hyperlinks stacking up in it.
+
     var oldLeafEdgeWidthL = this.leafEdgeWidth(this.twoPage.currentIndexL);
     var oldLeafEdgeWidthR = this.twoPage.edgeWidth-oldLeafEdgeWidthL;
     var newLeafEdgeWidthL = this.leafEdgeWidth(newIndexL);
@@ -2487,6 +2515,15 @@ BookReader.prototype.flipRightToLeft = function(newIndexL, newIndexR) {
             self.prefetch();
             self.animating = false;
 
+            // Protect against negative page indices. I think this shows up in
+            // two-page mode, when the cover (having index 0) is shown on the
+            // right; the left pane is not itself part of the book, and gets a
+            // negative index. This only occurs on left pages in two-page mode;
+            // never on right-pages. It also never occurs in single-page mode.
+            if (self.twoPage.currentIndexL >= 0) {
+              overlayLinks ('#BRtwopageview', self, self.twoPage.currentIndexL, top, self.twoPage.height, self.twoPage.scaledWL, self.twoPage.gutter - newWidthL);
+            }
+            overlayLinks ('#BRtwopageview', self, self.twoPage.currentIndexR, top, self.twoPage.height, self.twoPage.scaledWR, self.twoPage.gutter);
 
             self.updateSearchHilites2UP();
             self.updatePageNumBox2UP();
