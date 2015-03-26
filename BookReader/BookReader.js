@@ -991,8 +991,7 @@ BookReader.prototype.updatePageNumBox2UP = function() {
 // loadLeafs()
 //______________________________________________________________________________
 BookReader.prototype.loadLeafs = function() {
-
-
+    // FIXME the code below looks like it can be factored to remove the duplicated line.
     var self = this;
     if (null == this.timer) {
         this.timer=setTimeout(function(){self.drawLeafs()},250);
