@@ -99,6 +99,13 @@ function BookReader() {
     this.extra_posttitle_page = false;
     // Short description used in the "About this book" window.
     this.book_desc = '';
+    // By default, in 2-page mode the book reader will flip to the previous page
+    // if you click on the left page; and flips to the next page if you click on
+    // the right page. We can disable this feature by toggling this flag. It's
+    // useful to disable this feature when a book has hyperlinks, since if the
+    // user tries to click on the hyperlink but misses, they'll end up flipping
+    // a page instead.
+    this.disable_click_pageflip = false;
 
     // Zoom levels
     // $$$ provide finer grained zooming
@@ -2559,7 +2566,9 @@ BookReader.prototype.setMouseHandlers2UP = function() {
 
             if (! e.data.self.twoPageIsZoomedIn()) {
                 e.data.self.ttsStop();
-                e.data.self.left();
+                if (! this.disable_click_pageflip) {
+                  e.data.self.left();
+                }
             }
             e.preventDefault();
         }
@@ -2578,7 +2587,9 @@ BookReader.prototype.setMouseHandlers2UP = function() {
 
             if (! e.data.self.twoPageIsZoomedIn()) {
                 e.data.self.ttsStop();
-                e.data.self.right();
+                if (! this.disable_click_pageflip) {
+                  e.data.self.right();
+                }
             }
             e.preventDefault();
         }
