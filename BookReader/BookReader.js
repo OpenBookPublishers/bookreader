@@ -97,6 +97,8 @@ function BookReader() {
     this.highlight_links = false;
     // Flag indicating whether to insert an extra blank page after the title page.
     this.extra_posttitle_page = false;
+    // Short description used in the "About this book" window.
+    this.book_desc = '';
 
     // Zoom levels
     // $$$ provide finer grained zooming
@@ -3792,6 +3794,7 @@ BookReader.prototype.initToolbar = function(mode, ui) {
     $('<div style="display: none;"></div>').append(this.blankShareDiv()).append(this.blankInfoDiv()).appendTo($('body'));
 
     $('#BRinfo .BRfloatTitle a').attr( {'href': this.bookUrl} ).text(this.bookTitle).addClass('title');
+    $('#BRinfo .BRfloatMeta p').text(this.book_desc);
 
     // These functions can be overridden
     this.buildInfoDiv($('#BRinfo'));
@@ -3815,6 +3818,7 @@ BookReader.prototype.blankInfoDiv = function() {
                     '<div class="BRfloatTitle">',
                         '<h2><a/></h2>',
                     '</div>',
+                    '<br /><p/>',
                 '</div>',
             '</div>',
             '<div class="BRfloatFoot">',
