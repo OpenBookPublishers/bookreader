@@ -3723,6 +3723,7 @@ BookReader.prototype.initToolbar = function(mode, ui) {
         +     "<button class='BRicon pause'></button>"
         +     "<button class='BRicon info'></button>"
         +     "<button class='BRicon share'></button>"
+        +     "<button class='BRicon full'></button>" // Button to toggle highlighting of hyperlinks.
         +     readIcon
         //+     "<button class='BRicon full'></button>"
         +   "</span>"
@@ -3962,6 +3963,16 @@ BookReader.prototype.bindNavigationHandlers = function() {
 
     jIcons.filter('.pause').click(function(e) {
         self.autoToggle();
+        return false;
+    });
+
+     // Button to toggle highlighting of hyperlinks.
+    jIcons.filter('.full').click(function(e) { //FIXME i'm abusing "full"
+        self.highlight_links = !self.highlight_links;
+        // Fake the mode change to force the redrawing of the leafs.
+        m = self.mode;
+        self.mode = -1;
+        self.switchMode(m);
         return false;
     });
 
@@ -5416,7 +5427,7 @@ BookReader.prototype.initUIStrings = function()
                    '.read': 'Read this book aloud',
                    '.share': 'Share this book',
                    '.info': 'About this book',
-                   '.full': 'Show fullscreen',
+                   '.full': 'Highlight links', // FIXME this used to be 'Show fullscreen', but I'm using it to toggle the highlighting of hyperlinks.
                    '.book_left': 'Flip left',
                    '.book_right': 'Flip right',
                    '.book_up': 'Page up',
