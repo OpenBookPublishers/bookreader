@@ -2555,7 +2555,7 @@ BookReader.prototype.setMouseHandlers2UP = function() {
                 return true;
             }
 
-             if (! e.data.self.twoPageIsZoomedIn()) {
+            if (! e.data.self.twoPageIsZoomedIn()) {
                 e.data.self.ttsStop();
                 e.data.self.left();
             }
