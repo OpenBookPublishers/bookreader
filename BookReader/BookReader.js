@@ -95,6 +95,8 @@ function BookReader() {
     this.link_mdata = null;
     // FIXME document
     this.highlight_links = false;
+    // Flag indicating whether to insert an extra blank page after the title page.
+    this.extra_posttitle_page = false;
 
     // Zoom levels
     // $$$ provide finer grained zooming
@@ -3966,7 +3968,7 @@ BookReader.prototype.bindNavigationHandlers = function() {
         return false;
     });
 
-     // Button to toggle highlighting of hyperlinks.
+    // Button to toggle highlighting of hyperlinks.
     jIcons.filter('.full').click(function(e) { //FIXME i'm abusing "full"
         self.highlight_links = !self.highlight_links;
         // Fake the mode change to force the redrawing of the leafs.
@@ -4764,14 +4766,29 @@ BookReader.prototype._getPageHeight= function(index) {
 //--------
 // Returns the page URI or transparent image if out of range
 BookReader.prototype._getPageURI = function(index, reduce, rotate) {
-    if (index < 0 || index >= this.numLeafs) { // Synthesize page
-        return this.imagesBaseURL + "transparent.png";
+    var page_index = index;
+    if (this.extra_posttitle_page && (index >= 1) && (this.mode == this.constMode2up)) {
+      page_index = index - 1;
+    }
+
+    // Check if we should synthesize an empty page
+    if (index < 0) {
+      return this.imagesBaseURL + "transparent.png";
+    }
+    if (this.extra_posttitle_page && (this.mode == this.constMode2up)) {
+        if ((index >= (this.numLeafs + 1)) ||
+            (this.extra_posttitle_page && index == 1)) { //Pages are 0-indexed
+              return this.imagesBaseURL + "transparent.png";
+        }
+    }
+    if (index >= this.numLeafs) {
+      return this.imagesBaseURL + "transparent.png";
     }
 
     if ('undefined' == typeof(reduce)) {
         // reduce not passed in
         // $$$ this probably won't work for thumbnail mode
-        var ratio = this.getPageHeight(index) / this.twoPage.height;
+        var ratio = this.getPageHeight(page_index) / this.twoPage.height;
         var scale;
         // $$$ we make an assumption here that the scales are available pow2 (like kakadu)
         if (ratio < 2) {
@@ -4790,7 +4807,7 @@ BookReader.prototype._getPageURI = function(index, reduce, rotate) {
         reduce = scale;
     }
 
-    return this.getPageURI(index, reduce, rotate);
+    return this.getPageURI(page_index, reduce, rotate);
 }
 
 /*
