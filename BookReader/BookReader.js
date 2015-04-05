@@ -89,11 +89,14 @@ function BookReader() {
     //     path in the CSS.  Would be better to automagically find that path.
     this.imagesBaseURL = '/bookreader/images/';
 
-    // FIXME document
+    // Prefix to use when calculating the URL for hyperlinks to pages within
+    // the book.
     this.bookBaseURL = null;
-    // FIXME document
+    // Page-indexed dictionary containing the hyperlink information of each page
+    // in the book.
     this.link_mdata = null;
-    // FIXME document
+    // Flag indicating whether hyperlinks are to be highlighted, by changing
+    // their background color.
     this.highlight_links = false;
     // Flag indicating whether to insert an extra blank page after the title page.
     this.extra_posttitle_page = false;
