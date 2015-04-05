@@ -92,7 +92,8 @@ literary-philosophical status that no other work by Diderot shares. This\
 interactive, multi-media, colour edition offers a brand new translation of\
 Diderot's famous dialogue, and it also gives the reader much more.";
 
-// Base URL of the online book.
+// Base URL of the online book. This is used as a prefix when calculating the
+// URL for hyperlinks to pages within the book.
 br.bookBaseURL = "http://openbookpublishers.com/bookreader/BookReaderDemo";
 
 // Override the path used to find UI images
