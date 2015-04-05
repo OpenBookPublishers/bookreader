@@ -96,13 +96,15 @@ Diderot's famous dialogue, and it also gives the reader much more.";
 br.bookBaseURL = "http://openbookpublishers.com/bookreader/BookReaderDemo";
 
 // Override the path used to find UI images
-br.imagesBaseURL = '../BookReader/images/';
+br.imagesBaseURL = 'http://www.openbookpublishers.com/bookreader/BookReader/images/';
 
+br.extra_posttitle_page = false;
 br.disable_click_pageflip = true;
 br.title_text = 'Visit the homepage for "' + br.bookTitle + '" for downloads, additional resources, purchase options, and more ..';
 br.logo_text = '';
+br.logoURL = br.bookUrl;
 
-metadata_file_URL = "http://openbookpublishers.com/bookreader/BookReaderDemo/diderot-linkmetadata.json";
+metadata_file_URL = "http://www.openbookpublishers.com/bookreader/BookReaderDemo/diderot-linkmetadata.json";
 
 br.getEmbedCode = function(frameWidth, frameHeight, viewParams) {
     return "Embed code not supported in bookreader demo.";
