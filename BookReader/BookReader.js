@@ -441,6 +441,9 @@ BookReader.prototype.setClickHandler2UP = function( element, data, handler) {
 }
 
 function overlayLinks (container, self, index, leafTop, height, width, left) {
+if (self.link_mdata == null) {
+  return;
+}
 
 if (self.extra_posttitle_page && (index >= 1) && (self.mode == self.constMode2up)) {
   index = index - 1;
