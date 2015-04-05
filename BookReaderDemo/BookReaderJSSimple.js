@@ -86,6 +86,12 @@ br.numLeafs = 177;
 br.bookTitle = "Denis Diderot's 'Rameau's Nephew'";
 br.bookUrl = 'http://www.openbookpublishers.com/product/216';
 
+br.book_desc = "Probably completed in 1772-73, Denis Diderot's Rameau's Nephew\
+fascinated Goethe, Hegel, Engels and Freud in turn, achieving a\
+literary-philosophical status that no other work by Diderot shares. This\
+interactive, multi-media, colour edition offers a brand new translation of\
+Diderot's famous dialogue, and it also gives the reader much more.";
+
 // Base URL of the online book.
 br.bookBaseURL = "http://openbookpublishers.com/bookreader/BookReaderDemo";
 
