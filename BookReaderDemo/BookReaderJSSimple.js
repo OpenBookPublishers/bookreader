@@ -96,7 +96,7 @@ br.disable_click_pageflip = true;
 br.title_text = 'Visit the homepage for "' + br.bookTitle + '" for downloads, additional resources, purchase options, and more ..';
 br.logo_text = '';
 
-metadata_file_URL = "http://openbookpublishers.com/bookreader/BookReader/diderot-linkmetadata.json";
+metadata_file_URL = "http://openbookpublishers.com/bookreader/BookReaderDemo/diderot-linkmetadata.json";
 
 br.getEmbedCode = function(frameWidth, frameHeight, viewParams) {
     return "Embed code not supported in bookreader demo.";
