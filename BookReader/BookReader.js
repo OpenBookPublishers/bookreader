@@ -475,7 +475,17 @@ for (link_idx = 0; link_idx < links_on_page.length; link_idx++) {
       if (self.extra_posttitle_page && (self.mode == self.constMode2up)) {
         dest_page = dest_page + 1;
       }
-      document.location.href = event.data.bookBaseURL + "#page/" + dest_page + "/mode/" + event.data.page_mode + "up"; return false;
+
+      // Ensure that when we use bookBaseURL, it has a '/' at the end, otherwise
+      // internal links don't behave correctly. The reason is that bookBaseURL
+      // points to a directory, not to a file, so the suffix beginning with '#'
+      // must be preceded with a '/'.
+      var bbu = event.data.bookBaseURL;
+      if (bbu.substring(bbu.length - 1, 1) != "/") {
+        bbu = bbu + "/";
+      }
+
+      document.location.href = bbu + "#page/" + dest_page + "/mode/" + event.data.page_mode + "up"; return false;
     });
   } else {
     $(ldiv).bind('click', { link_url : link.url }, function(event) { window.open(event.data.link_url, '_blank'); return false; });
