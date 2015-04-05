@@ -94,7 +94,7 @@ Diderot's famous dialogue, and it also gives the reader much more.";
 
 // Base URL of the online book. This is used as a prefix when calculating the
 // URL for hyperlinks to pages within the book.
-br.bookBaseURL = "http://openbookpublishers.com/bookreader/BookReaderDemo";
+br.bookBaseURL = "http://www.openbookpublishers.com/bookreader/BookReaderDemo";
 
 // Override the path used to find UI images
 br.imagesBaseURL = 'http://www.openbookpublishers.com/bookreader/BookReader/images/';
