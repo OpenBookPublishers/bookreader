@@ -92,6 +92,10 @@ br.bookBaseURL = "http://openbookpublishers.com/bookreader/BookReaderDemo";
 // Override the path used to find UI images
 br.imagesBaseURL = '../BookReader/images/';
 
+br.disable_click_pageflip = true;
+br.title_text = 'Visit the homepage for "' + br.bookTitle + '" for downloads, additional resources, purchase options, and more ..';
+br.logo_text = '';
+
 br.getEmbedCode = function(frameWidth, frameHeight, viewParams) {
     return "Embed code not supported in bookreader demo.";
 }

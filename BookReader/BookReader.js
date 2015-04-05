@@ -106,6 +106,8 @@ function BookReader() {
     // user tries to click on the hyperlink but misses, they'll end up flipping
     // a page instead.
     this.disable_click_pageflip = false;
+    this.title_text = this.bookTitle;
+    this.logo_text = 'Go to Archive.org';
 
     // Zoom levels
     // $$$ provide finer grained zooming
@@ -3766,7 +3768,7 @@ BookReader.prototype.initToolbar = function(mode, ui) {
        $('#BRtoolbarbuttons .share').hide();
     }
 
-    $('#BRreturn a').attr('href', this.bookUrl).text(this.bookTitle);
+    $('#BRreturn a').attr('href', this.bookUrl).text(this.title_text);
 
     $('#BRtoolbar .BRnavCntl').addClass('BRup');
     $('#BRtoolbar .pause').hide();
@@ -5446,7 +5448,7 @@ BookReader.prototype.initUIStrings = function()
     // the toolbar and nav bar easier
 
     // Setup tooltips -- later we could load these from a file for i18n
-    var titles = { '.logo': 'Go to Archive.org', // $$$ update after getting OL record
+    var titles = { '.logo': this.logo_text, // $$$ update after getting OL record
                    '.zoom_in': 'Zoom in',
                    '.zoom_out': 'Zoom out',
                    '.onepg': 'One-page view',
