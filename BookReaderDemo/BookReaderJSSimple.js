@@ -96,6 +96,8 @@ br.disable_click_pageflip = true;
 br.title_text = 'Visit the homepage for "' + br.bookTitle + '" for downloads, additional resources, purchase options, and more ..';
 br.logo_text = '';
 
+metadata_file_URL = "http://openbookpublishers.com/bookreader/BookReader/diderot-linkmetadata.json";
+
 br.getEmbedCode = function(frameWidth, frameHeight, viewParams) {
     return "Embed code not supported in bookreader demo.";
 }
@@ -119,7 +121,7 @@ function load_book (link_mdata_json) {
 $.ajax({
     type : "GET",
     dataType : "json",
-    url : "http://openbookpublishers.com/bookreader/BookReader/diderot-linkmetadata.json",
+    url : metadata_file_URL,
     success : load_book,
     error : function() {
       alert('Could not load book data, please try refreshing this page.');
