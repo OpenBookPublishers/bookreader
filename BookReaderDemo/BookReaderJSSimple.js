@@ -99,6 +99,7 @@ br.bookBaseURL = "http://www.openbookpublishers.com/bookreader/BookReaderDemo";
 // Override the path used to find UI images
 br.imagesBaseURL = 'http://www.openbookpublishers.com/bookreader/BookReader/images/';
 
+br.mode = br.constMode2up;
 br.extra_posttitle_page = false;
 br.disable_click_pageflip = true;
 br.title_text = 'Visit the homepage for "' + br.bookTitle + '" for downloads, additional resources, purchase options, and more ..';
