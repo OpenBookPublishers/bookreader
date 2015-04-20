@@ -105,6 +105,7 @@ br.disable_click_pageflip = true;
 br.title_text = 'Visit the homepage for "' + br.bookTitle + '" for downloads, additional resources, purchase options, and more ..';
 br.logo_text = '';
 br.logoURL = br.bookUrl;
+br.initially_hide_navigation = true;
 
 metadata_file_URL = "http://www.openbookpublishers.com/bookreader/BookReaderDemo/diderot-linkmetadata.json";
 

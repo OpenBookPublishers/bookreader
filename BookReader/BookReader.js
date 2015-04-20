@@ -111,6 +111,9 @@ function BookReader() {
     this.disable_click_pageflip = false;
     this.title_text = this.bookTitle;
     this.logo_text = 'Go to Archive.org';
+    // If true, then when the book is opened the nav bar is shown briefly before
+    // being hidden.
+    this.initially_hide_navigation = false;
 
     // Zoom levels
     // $$$ provide finer grained zooming
@@ -3507,12 +3510,12 @@ BookReader.prototype.initNavbar = function() {
 
     $("#BRzoombtn").draggable({axis:'y',containment:'parent'});
 
-    /* Initial hiding
+    if (this.initially_hide_navigation) {
         $('#BRtoolbar').delay(3000).animate({top:-40});
         $('#BRnav').delay(3000).animate({bottom:-53});
         changeArrow();
         $('.BRnavCntl').delay(3000).animate({height:'43px'}).delay(1000).animate({opacity:.25},1000);
-    */
+    }
 }
 
 // initEmbedNavbar
