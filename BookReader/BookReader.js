@@ -445,6 +445,7 @@ BookReader.prototype.setClickHandler2UP = function( element, data, handler) {
 
 function overlayLinks (container, self, index, leafTop, height, width, left) {
 if (self.link_mdata == null) {
+  // This must mean that no link metadata was provided.
   return;
 }
 
