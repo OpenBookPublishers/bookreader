@@ -449,6 +449,11 @@ if (self.link_mdata == null) {
   return;
 }
 
+if (index < 0) {
+  // Index cannot be lower than 0 -- but it could be <0 in 2-page mode, on the first page.
+  return;
+}
+
 if (self.extra_posttitle_page && (index >= 1) && (self.mode == self.constMode2up)) {
   index = index - 1;
 }
