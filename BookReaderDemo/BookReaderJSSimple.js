@@ -108,7 +108,22 @@ br.logoURL = br.bookUrl;
 metadata_file_URL = "http://www.openbookpublishers.com/bookreader/BookReaderDemo/diderot-linkmetadata.json";
 
 br.getEmbedCode = function(frameWidth, frameHeight, viewParams) {
-    return "Embed code not supported in bookreader demo.";
+    var page = 'page/1';
+    var page_sep = '#';
+    if (typeof viewParams.page !== 'undefined') {
+        page = 'page/' + viewParams.page;
+    }
+    var mode = '';
+    var mode_sep = '';
+    if (typeof viewParams.mode !== 'undefined') {
+        mode = 'mode/' + viewParams.mode + 'up';
+        mode_sep = '/';
+    }
+
+    return ('<iframe width="100%" height="600" src="' +
+              br.bookBaseURL + '?ui=embed' +
+              page_sep + page + mode_sep + mode +
+              '" frameborder="0"></iframe>');
 }
 
 // This function is called back when the JSON-encoded book metadata download has
