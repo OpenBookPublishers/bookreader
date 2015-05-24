@@ -4823,7 +4823,7 @@ BookReader.prototype._getPageURI = function(index, reduce, rotate) {
               return this.imagesBaseURL + "transparent.png";
         }
     }
-    if (index >= this.numLeafs) {
+    else if (index >= this.numLeafs) {
       return this.imagesBaseURL + "transparent.png";
     }
 
