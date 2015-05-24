@@ -2584,7 +2584,7 @@ BookReader.prototype.setMouseHandlers2UP = function() {
         { self: this },
         function(e) {
             if (e.which == 3) {
-                // right click
+                // left click
                 if (e.data.self.protected) {
                     return false;
                 }
@@ -2593,7 +2593,7 @@ BookReader.prototype.setMouseHandlers2UP = function() {
 
             if (! e.data.self.twoPageIsZoomedIn()) {
                 e.data.self.ttsStop();
-                if (! this.disable_click_pageflip) {
+                if (! e.data.self.disable_click_pageflip) {
                   e.data.self.left();
                 }
             }
@@ -2614,7 +2614,7 @@ BookReader.prototype.setMouseHandlers2UP = function() {
 
             if (! e.data.self.twoPageIsZoomedIn()) {
                 e.data.self.ttsStop();
-                if (! this.disable_click_pageflip) {
+                if (! e.data.self.disable_click_pageflip) {
                   e.data.self.right();
                 }
             }
