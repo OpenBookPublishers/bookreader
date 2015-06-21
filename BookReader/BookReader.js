@@ -3793,7 +3793,7 @@ BookReader.prototype.initToolbar = function(mode, ui) {
        $('#BRtoolbarbuttons .share').hide();
     }
 
-    $('#BRreturn a').attr('href', this.bookUrl).text(this.title_text);
+    $('#BRreturn a').attr('href', this.bookUrl).html(this.title_text);
 
     $('#BRtoolbar .BRnavCntl').addClass('BRup');
     $('#BRtoolbar .pause').hide();
@@ -3832,7 +3832,7 @@ BookReader.prototype.initToolbar = function(mode, ui) {
     $('<div style="display: none;"></div>').append(this.blankShareDiv()).append(this.blankInfoDiv()).appendTo($('body'));
 
     $('#BRinfo .BRfloatTitle a').attr( {'href': this.bookUrl} ).text(this.bookTitle).addClass('title');
-    $('#BRinfo .BRfloatMeta p').text(this.book_desc);
+    $('#BRinfo .BRfloatMeta p').html(this.book_desc);
 
     // These functions can be overridden
     this.buildInfoDiv($('#BRinfo'));
