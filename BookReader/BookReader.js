@@ -3765,7 +3765,7 @@ BookReader.prototype.initToolbar = function(mode, ui) {
         +     "<button class='BRicon pause'></button>"
         +     "<button class='BRicon info'></button>"
         +     "<button class='BRicon share'></button>"
-        +     "<button class='BRicon full'></button>" // Button to toggle highlighting of hyperlinks.
+        +     "<button class='BRicon show_links'></button>" // Button to toggle highlighting of hyperlinks.
         +     readIcon
         //+     "<button class='BRicon full'></button>"
         +   "</span>"
@@ -4010,13 +4010,8 @@ BookReader.prototype.bindNavigationHandlers = function() {
         return false;
     });
 
-    // Button to toggle highlighting of hyperlinks.
-    jIcons.filter('.full').click(function(e) { //FIXME i'm abusing "full"
-        self.highlight_links = !self.highlight_links;
-        // Fake the mode change to force the redrawing of the leafs.
-        m = self.mode;
-        self.mode = -1;
-        self.switchMode(m);
+    jIcons.filter('.full').click(function(e) {
+        self.autoToggle();
         return false;
     });
 
@@ -4042,6 +4037,16 @@ BookReader.prototype.bindNavigationHandlers = function() {
 
     jIcons.filter('.read').click(function(e) {
         self.ttsToggle();
+        return false;
+    });
+
+    // Button to toggle highlighting of hyperlinks.
+    jIcons.filter('.show_links').click(function(e) {
+        self.highlight_links = !self.highlight_links;
+        // Fake the mode change to force the redrawing of the leafs.
+        m = self.mode;
+        self.mode = -1;
+        self.switchMode(m);
         return false;
     });
 
@@ -5486,7 +5491,7 @@ BookReader.prototype.initUIStrings = function()
                    '.read': 'Read this book aloud',
                    '.share': 'Share this book',
                    '.info': 'About this book',
-                   '.full': 'Highlight links', // FIXME this used to be 'Show fullscreen', but I'm using it to toggle the highlighting of hyperlinks.
+                   '.full': 'Show fullscreen',
                    '.book_left': 'Flip left',
                    '.book_right': 'Flip right',
                    '.book_up': 'Page up',
@@ -5496,7 +5501,8 @@ BookReader.prototype.initUIStrings = function()
                    '.BRdn': 'Show/hide nav bar', // Would have to keep updating on state change to have just "Hide nav bar"
                    '.BRup': 'Show/hide nav bar',
                    '.book_top': 'First page',
-                   '.book_bottom': 'Last page'
+                   '.book_bottom': 'Last page',
+                   '.show_links': 'Highlight links'
                   };
     if ('rl' == this.pageProgression) {
         titles['.book_leftmost'] = 'Last page';
